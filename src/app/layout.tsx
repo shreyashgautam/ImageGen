@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono,IBM_Plex_Sans} from "next/font/google";
+import {IBM_Plex_Sans} from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ClerkProvider } from "@clerk/nextjs";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+
 
 
 const IBM_PLEX = IBM_Plex_Sans({
@@ -15,10 +12,7 @@ const IBM_PLEX = IBM_Plex_Sans({
   subsets: ["latin"],
   variable:'--font-ibm-flex'
 });
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+
 
 export const metadata: Metadata = {
   title: "ImageGen",
