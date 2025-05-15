@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 // ====== USER PARAMS
 declare type CreateUserParams = {
   clerkId: string;
@@ -25,12 +23,12 @@ declare type AddImageParams = {
     transformationType: string;
     width: number;
     height: number;
-    config: any;
+    config: unknown; // replaced any with unknown
     secureURL: string;
     transformationURL: string;
-    aspectRatio: string | undefined;
-    prompt: string | undefined;
-    color: string | undefined;
+    aspectRatio?: string;
+    prompt?: string;
+    color?: string;
   };
   userId: string;
   path: string;
@@ -44,12 +42,12 @@ declare type UpdateImageParams = {
     transformationType: string;
     width: number;
     height: number;
-    config: any;
+    config: unknown; // replaced any with unknown
     secureURL: string;
     transformationURL: string;
-    aspectRatio: string | undefined;
-    prompt: string | undefined;
-    color: string | undefined;
+    aspectRatio?: string;
+    prompt?: string;
+    color?: string;
   };
   userId: string;
   path: string;
@@ -128,7 +126,7 @@ declare type TransformationFormProps = {
 };
 
 declare type TransformedImageProps = {
-  image: any;
+  image: unknown; // replaced any with unknown
   type: string;
   title: string;
   transformationConfig: Transformations | null;

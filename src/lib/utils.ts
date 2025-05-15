@@ -1,9 +1,9 @@
 import { type ClassValue, clsx } from "clsx";
 import qs from "qs";
 import { twMerge } from "tailwind-merge";
-
 import { aspectRatioOptions } from "@/contants";
 
+// MERGE TAILWIND CLASSES
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -65,7 +65,7 @@ export const formUrlQuery = ({
   })}`;
 };
 
-// REMOVE KEY FROM QUERY
+// REMOVE KEYS FROM QUERY
 interface RemoveUrlQueryParams {
   searchParams: string;
   keysToRemove: string[];
@@ -75,7 +75,7 @@ export function removeKeysFromQuery({
   searchParams,
   keysToRemove,
 }: RemoveUrlQueryParams): string {
-  const currentUrl = qs.parse(searchParams) as Record<string, any>;
+  const currentUrl = qs.parse(searchParams) as Record<string, unknown>;
 
   keysToRemove.forEach((key) => {
     delete currentUrl[key];
@@ -88,8 +88,8 @@ export function removeKeysFromQuery({
   return `${window.location.pathname}?${qs.stringify(currentUrl)}`;
 }
 
-// DEBOUNCE
-export const debounce = <T extends (...args: any[]) => void>(
+// DEBOUNCE FUNCTION
+export const debounce = <T extends (...args: unknown[]) => void>(
   func: T,
   delay: number
 ): ((...args: Parameters<T>) => void) => {
@@ -107,7 +107,7 @@ export interface ImageWithDimensions {
   aspectRatio?: AspectRatioKey;
   width?: number;
   height?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export const getImageSize = (
@@ -121,10 +121,10 @@ export const getImageSize = (
       1000
     );
   }
-  return image?.[dimension] || 1000;
+  return (image?.[dimension] as number) || 1000;
 };
 
-// DOWNLOAD IMAGE
+// DOWNLOAD IMAGE FUNCTION
 export const download = (url: string, filename: string): void => {
   if (!url) {
     throw new Error("Resource URL not provided!");
@@ -146,7 +146,7 @@ export const download = (url: string, filename: string): void => {
 };
 
 // DEEP MERGE OBJECTS
-export const deepMergeObjects = <T extends Record<string, any>>(
+export const deepMergeObjects = <T extends Record<string, unknown>>(
   obj1: T,
   obj2: T | null | undefined
 ): T => {
@@ -154,9 +154,9 @@ export const deepMergeObjects = <T extends Record<string, any>>(
     return obj1;
   }
 
-  let output: T = { ...obj2 };
+  const output: T = { ...obj2 };
 
-  for (let key in obj1) {
+  for (const key in obj1) {
     if (Object.prototype.hasOwnProperty.call(obj1, key)) {
       if (
         typeof obj1[key] === "object" &&
@@ -164,7 +164,10 @@ export const deepMergeObjects = <T extends Record<string, any>>(
         typeof obj2[key] === "object" &&
         obj2[key] !== null
       ) {
-        output[key] = deepMergeObjects(obj1[key], obj2[key]);
+        output[key] = deepMergeObjects(
+          obj1[key] as Record<string, unknown>,
+          obj2[key] as Record<string, unknown>
+        ) as unknown as T[typeof key];
       } else {
         output[key] = obj1[key];
       }

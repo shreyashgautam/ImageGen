@@ -7,14 +7,14 @@ interface MongooseConnection {
   promise: Promise<Mongoose> | null;
 }
 
-// Extend the NodeJS global object to include mongoose
+// Extend NodeJS global to store mongoose connection across hot reloads
 declare global {
-  // Only run this once — Node.js global declaration
-  // will persist across hot reloads in Next.js
+  // eslint-disable-next-line no-var
   var mongoose: MongooseConnection | undefined;
 }
 
-let cached: MongooseConnection = global.mongoose || {
+// Use const here because cached is never reassigned
+const cached: MongooseConnection = global.mongoose ?? {
   conn: null,
   promise: null,
 };
@@ -22,18 +22,20 @@ let cached: MongooseConnection = global.mongoose || {
 global.mongoose = cached;
 
 export const connectToDatabase = async (): Promise<Mongoose> => {
-  if (cached.conn) return cached.conn;
+  if (cached.conn) {
+    return cached.conn;
+  }
 
   if (!MONGODB_URL) {
     throw new Error('Missing MONGODB_URL');
   }
 
-  cached.promise =
-    cached.promise ||
-    mongoose.connect(MONGODB_URL, {
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGODB_URL, {
       dbName: 'imagegGen',
       bufferCommands: false,
     });
+  }
 
   cached.conn = await cached.promise;
 
